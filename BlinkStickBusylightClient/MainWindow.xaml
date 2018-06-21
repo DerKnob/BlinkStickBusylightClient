@@ -1,0 +1,96 @@
+﻿<Window x:Class="BlinkStickBusylightClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wpfx="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
+        Title="BlinkStick Busylight Client" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
+        WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" Icon="Resources/favicon.ico" ResizeMode="NoResize" Closing="Window_Closing"
+        SnapsToDevicePixels="True" Topmost="True">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" BorderThickness="0,0,0,0" VerticalAlignment="Top" Background="{StaticResource BrushAccentColor}">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" Stretch="Fill" Width="32" Height="32" Source="Resources/favicon.ico" />
+                <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10">
+                    <TextBlock Text="Please select your status" FontWeight="Bold" FontSize="14" Foreground="{StaticResource BrushPrimaryTextColor}" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10">
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="100" Name="buttonAvailable" Click="buttonAvailable_Click">
+                <StackPanel Orientation="Vertical">
+                    <Ellipse Fill="#33FF33" Width="50" Height="50" />
+                    <TextBlock Text="Available" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="100" Name="buttonBusy" Click="buttonBusy_Click">
+                <StackPanel Orientation="Vertical">
+                    <Ellipse Fill="#FFFF33" Width="50" Height="50" />
+                    <TextBlock Text="Busy" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="100" Name="buttonDoNotDisturb" Click="buttonDoNotDisturb_Click">
+                <StackPanel Orientation="Vertical">
+                    <Ellipse Fill="#FF3333" Width="50" Height="50" />
+                    <TextBlock Text="Do Not Disturb" />
+                </StackPanel>
+            </Button>
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="100" Name="buttonTurnOff" Click="buttonTurnOff_Click">
+                <StackPanel Orientation="Vertical">
+                    <Ellipse Fill="#000000" Width="50" Height="50" />
+                    <TextBlock Text="Turn Off" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        <Grid Grid.Row="2" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <ToggleButton Grid.Row="0" Name="buttonAdvanced" Content="Advanced" HorizontalAlignment="Right" Checked="buttonAdvanced_Checked" Unchecked="buttonAdvanced_Unchecked" />
+            <Grid Grid.Row="1" Margin="0,10" Name="gridAdvanced" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" VerticalAlignment="Top" Margin="0,0,10,10">
+                    <wpfx:ColorPicker  Name="colorPicker"  Height="30" DisplayColorAndName="True" SelectedColor="Blue" UsingAlphaChannel="False" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Top">
+                    <TextBlock Text="Select Mode:" FontWeight="Bold" Margin="0,0,0,5" />
+                    <RadioButton Name="radioButtonMode1" GroupName="Mode" Content="Set Color" Checked="radioButtonMode_Checked" IsChecked="True"/>
+                    <RadioButton Name="radioButtonMode2" GroupName="Mode" Content="Morph Color" Checked="radioButtonMode_Checked" />
+                    <RadioButton Name="radioButtonMode3" GroupName="Mode" Content="Blink Color" Checked="radioButtonMode_Checked" />
+                    <RadioButton Name="radioButtonMode4" GroupName="Mode" Content="Pulse Color" Checked="radioButtonMode_Checked" />
+
+                    <Grid Name="gridAdditionalSettings" Visibility="Collapsed" Margin="0,5,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        
+                        <Label Grid.Column="0" Grid.Row="0" Content="Delay:" Margin="0,0,5,0" />
+                        <TextBox Grid.Column="1" Grid.Row="0" Name="textBoxDelay" Text="500" PreviewTextInput="textBox_NumberOnly" />
+                        <Label Grid.Column="0" Grid.Row="1" Content="Sleep In Between:" Margin="0,0,5,0" />
+                        <TextBox Grid.Column="1" Grid.Row="1" Name="textBoxSleep" Text="100" PreviewTextInput="textBox_NumberOnly" />
+                    </Grid>
+
+                    <Button Name="buttonSetAdvanced" Content="Set" Margin="0,20,0,0" Click="buttonSetAdvanced_Click" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
