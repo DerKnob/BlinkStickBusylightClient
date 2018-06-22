@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlinkStickBusylightClient.Helper;
+using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;

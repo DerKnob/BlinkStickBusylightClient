@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlinkStickBusylightClient.Helper;
+using System;
 using System.Windows;
 
 namespace BlinkStickBusylightClient

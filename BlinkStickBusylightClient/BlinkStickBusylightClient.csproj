@@ -86,13 +86,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BlinkStickActionListener.cs" />
     <Compile Include="BlinkStickManager.cs" />
-    <Compile Include="EnvironmentUtils.cs" />
+    <Compile Include="Helper\EnvironmentUtils.cs" />
     <Compile Include="KeyboardListener.cs" />
     <Compile Include="NotifyIcon.cs" />
-    <Compile Include="themes\ColorManager.cs" />
-    <Compile Include="themes\GetStartScreenColors.cs" />
-    <Compile Include="themes\ImmersiveColors.cs" />
+    <Compile Include="WPF\ColorManager.cs" />
+    <Compile Include="WPF\GetStartScreenColors.cs" />
+    <Compile Include="WPF\ImmersiveColors.cs" />
+    <Compile Include="Threads\ThreadBlink.cs" />
+    <Compile Include="Threads\ThreadMorph.cs" />
     <Page Include="AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -140,7 +143,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="readme.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

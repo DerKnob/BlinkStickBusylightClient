@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using BlinkStickBusylightClient.Theads;
 using BlinkStickDotNet;
+using BlinkStickDotNet.Usb;
 
 namespace BlinkStickBusylightClient
 {
@@ -9,10 +12,73 @@ namespace BlinkStickBusylightClient
     {
         static private BlinkStickManager INSTANCE = null;
         static private Object lockGlobalAccess = new Object();
+        static private Object lockConcurrentModification = new Object();
+        private static int numberOfLeds = 8;
 
         private bool cancelThread = false;
         private bool isThreadRunning = false;
-        private Object lockConcurrentModification = new Object();
+        private UsbMonitor monitor;
+        private BlinkStick device = null;
+        private String deviceInfo = "No BlinkStick connected";
+
+        private List<BlinkStickActionListener> blinkStickActionListener = new List<BlinkStickActionListener>();
+
+        private BlinkStickManager()
+        {
+            monitor = new UsbMonitor();
+
+            //Attach to connected event
+            monitor.Connected += (object sender, DeviceModifiedArgs e) => {
+                BlinkStick blinkStick = GetBlinkStick();
+
+                if (blinkStick == null)
+                    return;
+
+                InitDevice(blinkStick);                
+            };
+
+            //Attach to disconnected event
+            monitor.Disconnected += (object sender, DeviceModifiedArgs e) => {
+                // reset
+                device = null;
+
+                deviceInfo = GetDeviceInformationInternal();
+
+                // Send notification to subscribers
+                foreach (BlinkStickActionListener listener in blinkStickActionListener)
+                {
+                    listener.OnDisconnect();
+                }
+            };
+
+            //Start monitoring
+            monitor.Start();
+
+            // check if BlinkStick is already connected
+            BlinkStick fistDevice = BlinkStick.FindFirst();
+
+            if (fistDevice == null)
+                return;
+
+            InitDevice(fistDevice);
+        }
+
+        private void InitDevice(BlinkStick newDevice)
+        {
+            device = newDevice;
+
+            OpenDevice(device);
+            device.SetMode(2);
+            CloseDevice(device);
+
+            deviceInfo = GetDeviceInformationInternal();
+
+            // Send notification to subscribers
+            foreach (BlinkStickActionListener listener in blinkStickActionListener)
+            {
+                listener.OnConnect();
+            }
+        }
 
         static public BlinkStickManager GetInstance()
         {
@@ -27,8 +93,34 @@ namespace BlinkStickBusylightClient
             }
         }
 
+        /****************************************************/
+        /****************************************************/
+
         private BlinkStick GetBlinkStick()
         {
+            BlinkStick stick = BlinkStick.FindFirst();
+
+            return stick;
+        }
+
+        private void CloseDevice(BlinkStick device)
+        {
+            lock (lockConcurrentModification)
+            {
+                device.CloseDevice();
+
+                isThreadRunning = false;
+                cancelThread = false;
+            }
+        }
+
+        private bool OpenDevice(BlinkStick device)
+        {
+            if (device == null)
+                return false;
+
+            bool result = false;
+
             lock (lockGlobalAccess)
             {
                 lock (lockConcurrentModification)
@@ -49,39 +141,31 @@ namespace BlinkStickBusylightClient
 
                 lock (lockConcurrentModification)
                 {
-                    BlinkStick stick = BlinkStick.FindFirst();
-
-                    if (stick != null)
+                    if (device != null)
                     {
                         isThreadRunning = true;
                         cancelThread = false;
-                    }
 
-                    return stick;
+                        result = device.OpenDevice();
+                    }
                 }
             }
+            return result;
         }
 
-
-        private void CloseDevice(BlinkStick device)
-        {
-            lock (lockConcurrentModification)
-            {
-                device.CloseDevice();
-
-                isThreadRunning = false;
-                cancelThread = false;
-            }
-        }
+        /****************************************************/
 
         public String GetDeviceInformation()
+        {
+            return deviceInfo;
+        }
+
+        private String GetDeviceInformationInternal()
         {
             // output of the BlinkStick infos
             StringBuilder temp = new StringBuilder();
             try
             {
-                BlinkStick device = GetBlinkStick();
-
                 if (device == null)
                 {
                     temp.Append("No BlinkStick connected");
@@ -89,17 +173,9 @@ namespace BlinkStickBusylightClient
                 else
                 {
                     //Open the device
-                    if (device.OpenDevice())
+                    if (OpenDevice(device))
                     {
-                        byte cr;
-                        byte cg;
-                        byte cb;
-
-                        device.GetColor(out cr, out cg, out cb);
-
                         temp.Append("Serial:       " + device.Meta.Serial);
-                        temp.Append("\n");
-                        temp.Append(String.Format("    Device color: #{0:X2}{1:X2}{2:X2}", cr, cg, cb));
                         temp.Append("\n");
                         temp.Append("    Manufacturer:  " + device.Meta.Manufacturer);
                         temp.Append("\n");
@@ -130,116 +206,50 @@ namespace BlinkStickBusylightClient
             return temp.ToString();
         }
 
-        private BlinkStickManager()
-        {
+        /****************************************************/
 
+        public void AddListener(BlinkStickActionListener listener)
+        {
+            blinkStickActionListener.Add(listener);
+
+            // Send notification to new subscriber if already connected
+            if (device != null)
+                listener.OnConnect();
+        }
+
+        public void RemoveListener(BlinkStickActionListener listener)
+        {
+            blinkStickActionListener.Remove(listener);
         }
 
         /****************************************************/
 
-        internal void SetAvailable()
-        { 
-            new Thread(() =>
-            {
-                try
-                {
-                    BlinkStick device = GetBlinkStick();
-
-                    if (device == null)
-                        return;
-
-                    //Open the device
-                    if (device.OpenDevice())
-                    {
-                        device.Morph("green");
-
-                        // cleanup
-                        CloseDevice(device);
-                    }
-                }
-                    catch (Exception)
-                {
-                }
-            }).Start();
-        }
-
         internal void TurnOff()
         {
-            new Thread(() =>
-            {
-                try
-                {
-                    BlinkStick device = GetBlinkStick();
-
-                    if (device == null)
-                        return;
-
-                    //Open the device
-                    if (device.OpenDevice())
-                    {
-                        device.TurnOff();
-
-                        // cleanup
-                        CloseDevice(device);
-                    }
-                }
-                    catch (Exception)
-                {
-                }
-            }).Start();
+            SetColor("#000000");
         }
 
-        internal void SetDoNotDisturb()
+        internal void SetAvailable()
         {
-            new Thread(() =>
-            {
-                try
-                {
-                    BlinkStick device = GetBlinkStick();
-
-                    if (device == null)
-                        return;
-
-                    //Open the device
-                    if (device.OpenDevice())
-                    {
-                        device.Morph("red");
-
-                        // cleanup
-                        CloseDevice(device);
-                    }
-                }
-                    catch (Exception)
-                {
-                }
-            }).Start();
+            MorphColor("#00FF00");
         }
 
         internal void SetBusy()
         {
-            new Thread(() =>
-            {
-                try
-                {
-                    BlinkStick device = GetBlinkStick();
-
-                    if (device == null)
-                        return;
-
-                    //Open the device
-                    if (device.OpenDevice())
-                    {
-                        device.Morph("yellow");
-
-                        // cleanup
-                        CloseDevice(device);
-                    }
-                }
-                    catch (Exception)
-                {
-                }
-            }).Start();
+            MorphColor("#FFAA00");
         }
+
+        internal void SetDoNotDisturb()
+        {
+            MorphColor("#FF0000");
+        }
+
+        internal void SetPhoneCall()
+        {
+            PulseColor("#FF0000");
+        }
+
+        /****************************************************/
 
         internal void SetColor(string color)
         {
@@ -247,15 +257,13 @@ namespace BlinkStickBusylightClient
             {
                 try
                 {
-                    BlinkStick device = GetBlinkStick();
-
-                    if (device == null)
-                        return;
-
                     //Open the device
-                    if (device.OpenDevice())
+                    if (OpenDevice(device))
                     {
-                        device.SetColor(color);
+                        for (byte i = 0; i < numberOfLeds; i++)
+                        {
+                            device.SetColor(0, i, color);
+                        }
 
                         // cleanup
                         CloseDevice(device);
@@ -267,21 +275,19 @@ namespace BlinkStickBusylightClient
             }).Start();
         }
 
-        internal void MorphColor(string color)
+        internal void MorphColor(string color, int duration = 125)
         {
             new Thread(() =>
             {
                 try
                 {
-                    BlinkStick device = GetBlinkStick();
-
-                    if (device == null)
-                        return;
-
                     //Open the device
-                    if (device.OpenDevice())
+                    if (OpenDevice(device))
                     {
-                        device.Morph(color);
+                        for (byte i = 0; i < numberOfLeds; i++)
+                        {
+                            device.Morph(0, i, color, duration / numberOfLeds);
+                        }
 
                         // cleanup
                         CloseDevice(device);
@@ -301,24 +307,31 @@ namespace BlinkStickBusylightClient
 
                 try
                 {
-                    BlinkStick device = GetBlinkStick();
-
-                    if (device == null)
-                        return;
-
                     //Open the device
-                    if (device.OpenDevice())
+                    if (OpenDevice(device))
                     {
-                    
-                            while (cancelThread == false)
+                        while (cancelThread == false)
+                        {
+                            List<ThreadMorph> threadList = new List<ThreadMorph>();
+                            for (byte i = 0; i < numberOfLeds; i++)
                             {
-                                device.Pulse(color, repeates, duration, steps);
-
-                                Thread.Sleep(threadSleep);
+                                ThreadMorph thread = new ThreadMorph(device, i, color, repeates, duration, steps);
+                                threadList.Add(thread);
+                                thread.Start();
                             }
 
-                            // cleanup
-                            CloseDevice(device);
+                            // wait for all threads to finish
+                            foreach (ThreadMorph thread in threadList)
+                            {
+                                while (thread.IsRunning())
+                                    Thread.Sleep(10);
+                            }
+
+                            Thread.Sleep(threadSleep);
+                        }
+
+                        // cleanup
+                        CloseDevice(device);
 
                     }
                 }
@@ -336,18 +349,25 @@ namespace BlinkStickBusylightClient
 
                 try
                 {
-
-                    BlinkStick device = GetBlinkStick();
-
-                    if (device == null)
-                        return;
-
                     //Open the device
-                    if (device.OpenDevice())
+                    if (OpenDevice(device))
                     {
                         while (cancelThread == false)
                         {
-                            device.Blink(color, repeates, delay);
+                            List<ThreadBlink> threadList = new List<ThreadBlink>();
+                            for (byte i = 0; i < numberOfLeds; i++)
+                            {
+                                ThreadBlink thread = new ThreadBlink(device, i, color, repeates, delay);
+                                threadList.Add(thread);
+                                thread.Start();
+                            }
+
+                            // wait for all threads to finish
+                            foreach (ThreadBlink thread in threadList)
+                            {
+                                while (thread.IsRunning())
+                                    Thread.Sleep(10);
+                            }
 
                             Thread.Sleep(threadSleep);
                         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using BlinkStickBusylightClient.Helper;
+using Microsoft.Win32;
 using System;
 
 namespace BlinkStickBusylightClient
@@ -20,11 +21,13 @@ namespace BlinkStickBusylightClient
             System.Windows.Forms.ContextMenu notifyItemContextMenu = new System.Windows.Forms.ContextMenu();
 
             // create context menu
+            /*
             notifyItemContextMenu.MenuItems.Add("&Available", new EventHandler(SetStatusAvailable));
             notifyItemContextMenu.MenuItems.Add("&Busy", new EventHandler(SetStatusBusy));
             notifyItemContextMenu.MenuItems.Add("&Do Not Disturb", new EventHandler(SetStatusDoNotDisturb));
             notifyItemContextMenu.MenuItems.Add("&Turn Off", new EventHandler(SetStatusTurnOff));
             notifyItemContextMenu.MenuItems.Add("-");
+            */
             notifyItemContextMenu.MenuItems.Add("About BlinkStick Busylight Client", new EventHandler(About));
             notifyItemContextMenu.MenuItems.Add("-");
             itemAutostart = notifyItemContextMenu.MenuItems.Add("&Autostart BlinkStick Busylight Client", new EventHandler(Autostart));

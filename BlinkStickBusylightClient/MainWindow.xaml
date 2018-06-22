@@ -27,20 +27,26 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10">
             <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="100" Name="buttonAvailable" Click="buttonAvailable_Click">
                 <StackPanel Orientation="Vertical">
-                    <Ellipse Fill="#33FF33" Width="50" Height="50" />
+                    <Ellipse Fill="#00FF00" Width="50" Height="50" />
                     <TextBlock Text="Available" HorizontalAlignment="Center" />
                 </StackPanel>
             </Button>
             <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="100" Name="buttonBusy" Click="buttonBusy_Click">
                 <StackPanel Orientation="Vertical">
-                    <Ellipse Fill="#FFFF33" Width="50" Height="50" />
+                    <Ellipse Fill="#FFAA00" Width="50" Height="50" />
                     <TextBlock Text="Busy" HorizontalAlignment="Center" />
                 </StackPanel>
             </Button>
             <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="100" Name="buttonDoNotDisturb" Click="buttonDoNotDisturb_Click">
                 <StackPanel Orientation="Vertical">
-                    <Ellipse Fill="#FF3333" Width="50" Height="50" />
+                    <Ellipse Fill="#FF0000" Width="50" Height="50" />
                     <TextBlock Text="Do Not Disturb" />
+                </StackPanel>
+            </Button>
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="100" Name="buttonPhoneCall" Click="buttonPhoneCall_Click">
+                <StackPanel Orientation="Vertical">
+                    <Ellipse Fill="#FF0000" Width="50" Height="50" />
+                    <TextBlock Text="Phone Call" />
                 </StackPanel>
             </Button>
             <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="100" Name="buttonTurnOff" Click="buttonTurnOff_Click">
@@ -84,7 +90,7 @@
                         
                         <Label Grid.Column="0" Grid.Row="0" Content="Delay:" Margin="0,0,5,0" />
                         <TextBox Grid.Column="1" Grid.Row="0" Name="textBoxDelay" Text="500" PreviewTextInput="textBox_NumberOnly" />
-                        <Label Grid.Column="0" Grid.Row="1" Content="Sleep In Between:" Margin="0,0,5,0" />
+                        <Label Grid.Column="0" Grid.Row="1" Name="labelSleep" Content="Sleep In Between:" Margin="0,0,5,0" />
                         <TextBox Grid.Column="1" Grid.Row="1" Name="textBoxSleep" Text="100" PreviewTextInput="textBox_NumberOnly" />
                     </Grid>
 

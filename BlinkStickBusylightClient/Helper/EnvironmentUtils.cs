@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
-namespace BlinkStickBusylightClient
+namespace BlinkStickBusylightClient.Helper
 {
     public static class EnvironmentUtils
     {
