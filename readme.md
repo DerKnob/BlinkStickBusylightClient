@@ -1,6 +1,6 @@
 # BlinkStick Busylight Client
 
-[BlinkStick Logo](https://www.blinkstick.com/images/home/logo-homepage.png)
+![BlinkStick Logo](__ressourcen/merch/logo-homepage.png)
 
 A Busylight Client for the [BlinkStick Pro](https://www.blinkstick.com/).
 
