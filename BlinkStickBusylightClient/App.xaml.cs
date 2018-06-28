@@ -42,7 +42,14 @@ namespace BlinkStickBusylightClient
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {
+            BlinkStickManager.GetInstance().TurnOff();
+
             //KListener.Dispose();
+        }
+
+        void Application_SessionEnding(object sender, SessionEndingCancelEventArgs e)
+        {
+            BlinkStickManager.GetInstance().TurnOff();
         }
     }
 }
