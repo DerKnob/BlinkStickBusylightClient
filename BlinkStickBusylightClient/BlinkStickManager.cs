@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Threading;
-using BlinkStickBusylightClient.Theads;
 using BlinkStickDotNet;
 using BlinkStickDotNet.Usb;
 
@@ -54,13 +54,20 @@ namespace BlinkStickBusylightClient
             //Start monitoring
             monitor.Start();
 
+            Reconnect();
+        }
+
+        private bool Reconnect()
+        {
             // check if BlinkStick is already connected
             BlinkStick fistDevice = BlinkStick.FindFirst();
 
             if (fistDevice == null)
-                return;
+                return false;
 
             InitDevice(fistDevice);
+
+            return true;
         }
 
         private void InitDevice(BlinkStick newDevice)
@@ -117,7 +124,13 @@ namespace BlinkStickBusylightClient
         private bool OpenDevice(BlinkStick device)
         {
             if (device == null)
-                return false;
+            {
+                bool reconnect = Reconnect();
+
+                // check if we could reconnect
+                if (reconnect == false)
+                    return false;
+            }
 
             bool result = false;
 
@@ -224,8 +237,27 @@ namespace BlinkStickBusylightClient
 
         /****************************************************/
 
-        internal void TurnOff()
+        internal void TurnOff(bool forced = false)
         {
+            // if it is forced, then don't run in a background thread
+            // cancel all running threads
+            if (forced == true)
+            {
+                cancelThread = true;
+                if (OpenDevice(device))
+                {
+                    for (byte i = 0; i < numberOfLeds; i++)
+                    {
+                        device.SetColor(0, i, "#000000");
+                    }
+
+                    // cleanup
+                    CloseDevice(device);
+                }
+
+                return;
+            }
+            
             SetColor("#000000");
         }
 
@@ -303,36 +335,80 @@ namespace BlinkStickBusylightClient
         {
             new Thread(() =>
             {
-                int repeates = 1;
-
                 try
                 {
+                    Color colorObject;
+
+                    if (color.StartsWith("#"))
+                    {
+                        colorObject = ColorTranslator.FromHtml(color);
+                    }
+                    else
+                    {
+                        colorObject = Color.FromName(color);
+                    }
+
+                    byte r = colorObject.R;
+                    byte g = colorObject.G;
+                    byte b = colorObject.B;
+
                     //Open the device
                     if (OpenDevice(device))
                     {
                         while (cancelThread == false)
                         {
-                            List<ThreadMorph> threadList = new List<ThreadMorph>();
-                            for (byte i = 0; i < numberOfLeds; i++)
+                            // glow on
+                            for (int j = 0; j < steps; j++)
                             {
-                                ThreadMorph thread = new ThreadMorph(device, i, color, repeates, duration, steps);
-                                threadList.Add(thread);
-                                thread.Start();
+                                if (cancelThread)
+                                    break;
+
+                                byte rTemp = (byte)(((float)r) / steps * j);
+                                byte gTemp = (byte)(((float)g) / steps * j);
+                                byte bTemp = (byte)(((float)b) / steps * j);
+
+                                for (byte i = 0; i < numberOfLeds; i++)
+                                {
+                                    device.SetColor(0, i, rTemp, gTemp, bTemp);
+                                }
+                                Thread.Sleep(duration / steps);
                             }
 
-                            // wait for all threads to finish
-                            foreach (ThreadMorph thread in threadList)
+                            // glow off
+                            // glow on
+                            for (int j = steps - 1; j >= 0; j--)
                             {
-                                while (thread.IsRunning())
-                                    Thread.Sleep(10);
+                                if (cancelThread)
+                                    break;
+
+                                byte rTemp = (byte)(((float)r) / steps * j);
+                                byte gTemp = (byte)(((float)g) / steps * j);
+                                byte bTemp = (byte)(((float)b) / steps * j);
+
+                                for (byte i = 0; i < numberOfLeds; i++)
+                                {
+                                    device.SetColor(0, i, rTemp, gTemp, bTemp);
+                                }
+                                Thread.Sleep(duration / steps);
                             }
+
+                            if (cancelThread)
+                                break;
+
+                            // turn off
+                            for (byte i = 0; i < numberOfLeds; i++)
+                            {
+                                device.SetColor(0, i, "#000000");
+                            }
+
+                            if (cancelThread)
+                                break;
 
                             Thread.Sleep(threadSleep);
                         }
 
                         // cleanup
                         CloseDevice(device);
-
                     }
                 }
                 catch (Exception)
@@ -345,8 +421,6 @@ namespace BlinkStickBusylightClient
         {
             new Thread(() =>
             {
-                int repeates = 1;
-
                 try
                 {
                     //Open the device
@@ -354,20 +428,23 @@ namespace BlinkStickBusylightClient
                     {
                         while (cancelThread == false)
                         {
-                            List<ThreadBlink> threadList = new List<ThreadBlink>();
                             for (byte i = 0; i < numberOfLeds; i++)
                             {
-                                ThreadBlink thread = new ThreadBlink(device, i, color, repeates, delay);
-                                threadList.Add(thread);
-                                thread.Start();
+                                device.SetColor(0, i, color);
+                            }
+                            Thread.Sleep(delay);
+
+                            if (cancelThread)
+                                break;
+
+                            // turn off
+                            for (byte i = 0; i < numberOfLeds; i++)
+                            {
+                                device.SetColor(0, i, "#000000");
                             }
 
-                            // wait for all threads to finish
-                            foreach (ThreadBlink thread in threadList)
-                            {
-                                while (thread.IsRunning())
-                                    Thread.Sleep(10);
-                            }
+                            if (cancelThread)
+                                break;
 
                             Thread.Sleep(threadSleep);
                         }

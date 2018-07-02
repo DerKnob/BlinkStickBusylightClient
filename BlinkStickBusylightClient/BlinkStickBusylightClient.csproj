@@ -89,13 +89,11 @@
     <Compile Include="BlinkStickActionListener.cs" />
     <Compile Include="BlinkStickManager.cs" />
     <Compile Include="Helper\EnvironmentUtils.cs" />
-    <Compile Include="KeyboardListener.cs" />
+    <Compile Include="GlobalKeyboardHook.cs" />
     <Compile Include="NotifyIcon.cs" />
     <Compile Include="WPF\ColorManager.cs" />
     <Compile Include="WPF\GetStartScreenColors.cs" />
     <Compile Include="WPF\ImmersiveColors.cs" />
-    <Compile Include="Threads\ThreadBlink.cs" />
-    <Compile Include="Threads\ThreadMorph.cs" />
     <Page Include="AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

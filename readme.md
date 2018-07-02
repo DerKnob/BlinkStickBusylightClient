@@ -23,11 +23,12 @@ Checkout the project with git. Then open then Visual Studio solution. Go to **Ex
 
 ## ToDo
 The following tasks are open:
-- [ ] Keyboard Shortcuts
+- [x] Keyboard Shortcuts
 - [x] Connect / Disconnect monitor
 - [x] Change color on dekstop locking / unlocking
 - [ ] Save / Restore settings
-- [ ] Pulse and Blink is not working correct
+- [x] Pulse and Blink is not working correct
+- [x] Disconnect somtimes not correctly handled
 
 ## Known Issues
 - Only working with BlinkStick Pro

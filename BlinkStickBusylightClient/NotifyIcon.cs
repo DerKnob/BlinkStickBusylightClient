@@ -64,6 +64,10 @@ namespace BlinkStickBusylightClient
         {
             Shutdown();
 
+            // send the main app the close event
+            App app = (App)App.Current;
+            app.Close();
+
             if (System.Windows.Forms.Application.MessageLoop)
             {
                 System.Windows.Forms.Application.Exit();
