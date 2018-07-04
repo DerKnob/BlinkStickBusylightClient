@@ -13,7 +13,7 @@ Included projects:
 - BlinkStickBusylightClient
 
 ### Installation File
-The [latest Version](_setup/output/BlinkStickBusylightClient_0.8.5.0.exe) can be downloaded as installer.
+The [latest Version](_setup/output/) can be downloaded from the output folder.
 
 ### Checkout & Build
 Checkout the project with git. Then open then Visual Studio solution. Go to **Extras->NuGet Package Manager->Package Manager Console** to open the **Package Manager Console**. Then type the command *Update-Package* to update the dependencies. If you want to setup it manually, have a look at the **3rd Party Libs** list. Now the build should work.
