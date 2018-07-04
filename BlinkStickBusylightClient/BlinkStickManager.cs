@@ -147,8 +147,10 @@ namespace BlinkStickBusylightClient
                 }
 
                 // and wait for cancel
-                while (isThreadRunning)
+                int i = 0;
+                while ((isThreadRunning) || (i < 200))
                 {
+                    i++;
                     Thread.Sleep(10);
                 }
 

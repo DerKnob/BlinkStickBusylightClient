@@ -49,5 +49,10 @@
     <Style TargetType="ToggleButton">
         <Setter Property="Padding" Value="10,5"/>
     </Style>
+	
+	<!-- Fonts -->
+	<Style x:Key="FontAwesome">
+        <Setter Property="TextElement.FontFamily" Value="pack://application:,,,/BlinkStickBusylightClient;component/Resources/fonts/#FontAwesome" />
+    </Style>
 
 </ResourceDictionary>

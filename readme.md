@@ -7,18 +7,27 @@ A Busylight Client for the [BlinkStick Pro](https://www.blinkstick.com/).
 **This is an Alpha version!**
 
 
-## Included Projects
+## Install or Build by yourself
+### Included Projects
 Included projects:
 - BlinkStickBusylightClient
 
+### Installation File
+The [latest Version](_setup/output/BlinkStickBusylightClient_0.8.5.0.exe) can be downloaded as installer.
 
-## How to test
-### Checkout
+### Checkout & Build
 Checkout the project with git. Then open then Visual Studio solution. Go to **Extras->NuGet Package Manager->Package Manager Console** to open the **Package Manager Console**. Then type the command *Update-Package* to update the dependencies. If you want to setup it manually, have a look at the **3rd Party Libs** list. Now the build should work.
 
+## Screenshots
+The UI is not a gamechanger - but it's working ;-)
 
-## 3rd Party Libs
+![Main Window](__ressourcen/screenshots/screenshot_01.png)
+![About Window](__ressourcen/screenshots/screenshot_02.png)
+
+
+## 3rd Party License
 - BlinkStickDotNet.dll
+- [FontAwesome](https://fontawesome.com/)
 
 
 ## ToDo
@@ -30,6 +39,11 @@ The following tasks are open:
 - [x] Pulse and Blink is not working correct
 - [x] Disconnect somtimes not correctly handled
 
+
 ## Known Issues
 - Only working with BlinkStick Pro
 - Not working with multiple BlinkSticks connected
+
+
+## Ideas for the Future
+- [ ] Connect to "Skype for Business" and sync the available state

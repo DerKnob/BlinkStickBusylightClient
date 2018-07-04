@@ -26,26 +26,29 @@
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10">
             <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="100" Name="buttonAvailable" Click="buttonAvailable_Click">
-                <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Vertical" ToolTip="CTRL+SHIFT+F9">
                     <Ellipse Fill="#00FF00" Width="50" Height="50" />
                     <TextBlock Text="Available" HorizontalAlignment="Center" />
                 </StackPanel>
             </Button>
             <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="100" Name="buttonBusy" Click="buttonBusy_Click">
-                <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Vertical" ToolTip="CTRL+SHIFT+F10">
                     <Ellipse Fill="#FFAA00" Width="50" Height="50" />
                     <TextBlock Text="Busy" HorizontalAlignment="Center" />
                 </StackPanel>
             </Button>
             <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="100" Name="buttonDoNotDisturb" Click="buttonDoNotDisturb_Click">
-                <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Vertical" ToolTip="CTRL+SHIFT+F11">
                     <Ellipse Fill="#FF0000" Width="50" Height="50" />
                     <TextBlock Text="Do Not Disturb" />
                 </StackPanel>
             </Button>
             <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="100" Name="buttonPhoneCall" Click="buttonPhoneCall_Click">
-                <StackPanel Orientation="Vertical">
-                    <Ellipse Fill="#FF0000" Width="50" Height="50" />
+                <StackPanel Orientation="Vertical" ToolTip="CTRL+SHIFT+F12">
+                    <Grid>
+                        <Ellipse Fill="#FF0000" Width="50" Height="50" />
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="&#xf095;" Style="{DynamicResource FontAwesome}" FontSize="28" Foreground="White"/>
+                    </Grid>
                     <TextBlock Text="Phone Call" />
                 </StackPanel>
             </Button>
@@ -90,8 +93,8 @@
                         
                         <Label Grid.Column="0" Grid.Row="0" Content="Delay:" Margin="0,0,5,0" />
                         <TextBox Grid.Column="1" Grid.Row="0" Name="textBoxDelay" Text="500" PreviewTextInput="textBox_NumberOnly" />
-                        <Label Grid.Column="0" Grid.Row="1" Name="labelSleep" Content="Sleep In Between:" Margin="0,0,5,0" />
-                        <TextBox Grid.Column="1" Grid.Row="1" Name="textBoxSleep" Text="100" PreviewTextInput="textBox_NumberOnly" />
+                        <Label Grid.Column="0" Grid.Row="1" Name="labelSleep" Content="Sleep In Between:" Margin="0,5,5,0" />
+                        <TextBox Grid.Column="1" Grid.Row="1" Name="textBoxSleep" Text="100" PreviewTextInput="textBox_NumberOnly" Margin="0,5,0,0" />
                     </Grid>
 
                     <Button Name="buttonSetAdvanced" Content="Set" Margin="0,20,0,0" Click="buttonSetAdvanced_Click" />
