@@ -56,8 +56,9 @@ namespace BlinkStickBusylightClient
 
         private void notifyIconDoubleClick(Object sender, EventArgs e)
         {
-            MainWindow.GetInstance().Visibility = System.Windows.Visibility.Visible;
-
+            MainWindow mainWindow = MainWindow.GetInstance();
+            mainWindow.Visibility = System.Windows.Visibility.Visible;
+            mainWindow.Activate();
         }
 
         private void Close(Object sender, EventArgs e)

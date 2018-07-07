@@ -148,10 +148,14 @@ namespace BlinkStickBusylightClient
 
                 // and wait for cancel
                 int i = 0;
-                while ((isThreadRunning) || (i < 200))
+                while (isThreadRunning)
                 {
                     i++;
                     Thread.Sleep(10);
+
+                    // break if it is taking too long
+                    if (i > 200)
+                        break;
                 }
 
                 lock (lockConcurrentModification)

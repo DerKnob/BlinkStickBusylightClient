@@ -4,7 +4,7 @@
         xmlns:wpfx="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
         Title="BlinkStick Busylight Client" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
         WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" Icon="Resources/favicon.ico" ResizeMode="NoResize" Closing="Window_Closing"
-        SnapsToDevicePixels="True" Topmost="True">
+        SnapsToDevicePixels="True">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
