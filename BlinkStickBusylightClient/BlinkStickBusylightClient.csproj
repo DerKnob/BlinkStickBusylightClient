@@ -88,6 +88,7 @@
     </ApplicationDefinition>
     <Compile Include="BlinkStickActionListener.cs" />
     <Compile Include="BlinkStickManager.cs" />
+    <Compile Include="BlinkStickState.cs" />
     <Compile Include="Helper\EnvironmentUtils.cs" />
     <Compile Include="GlobalKeyboardHook.cs" />
     <Compile Include="NotifyIcon.cs" />

@@ -4,7 +4,7 @@
 
 A Busylight Client for the [BlinkStick Pro](https://www.blinkstick.com/).
 
-**This is an Alpha version!**
+**This is an Beta version!**
 
 
 ## Install or Build by yourself
@@ -35,7 +35,7 @@ The following tasks are open:
 - [x] Keyboard Shortcuts
 - [x] Connect / Disconnect monitor
 - [x] Change color on dekstop locking / unlocking
-- [ ] Save / Restore settings
+- [x] Save / Restore settings
 - [x] Pulse and Blink is not working correct
 - [x] Disconnect somtimes not correctly handled
 

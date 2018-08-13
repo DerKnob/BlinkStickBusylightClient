@@ -189,7 +189,7 @@ namespace BlinkStickBusylightClient
             }
             else if (e.Reason == SessionSwitchReason.SessionUnlock)
             {
-                BlinkStickManager.GetInstance().SetAvailable();
+                BlinkStickManager.GetInstance().RestoreLastState();
             }
         }
     }

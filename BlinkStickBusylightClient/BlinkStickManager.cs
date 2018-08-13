@@ -1,10 +1,11 @@
-﻿using System;
+﻿using BlinkStickDotNet;
+using BlinkStickDotNet.Usb;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Threading;
-using BlinkStickDotNet;
-using BlinkStickDotNet.Usb;
+using static BlinkStickBusylightClient.BlinkStickState;
 
 namespace BlinkStickBusylightClient
 {
@@ -13,8 +14,8 @@ namespace BlinkStickBusylightClient
         static private BlinkStickManager INSTANCE = null;
         static private Object lockGlobalAccess = new Object();
         static private Object lockConcurrentModification = new Object();
-        private static int numberOfLeds = 8;
-
+        static private int numberOfLeds = 8;
+        
         private bool cancelThread = false;
         private bool isThreadRunning = false;
         private UsbMonitor monitor;
@@ -22,6 +23,9 @@ namespace BlinkStickBusylightClient
         private String deviceInfo = "No BlinkStick connected";
 
         private List<BlinkStickActionListener> blinkStickActionListener = new List<BlinkStickActionListener>();
+
+        private BlinkStickState currentState;
+        private BlinkStickState lastState;
 
         private BlinkStickManager()
         {
@@ -114,6 +118,8 @@ namespace BlinkStickBusylightClient
         {
             lock (lockConcurrentModification)
             {
+                lastState = currentState;
+
                 device.CloseDevice();
 
                 isThreadRunning = false;
@@ -260,7 +266,6 @@ namespace BlinkStickBusylightClient
                     // cleanup
                     CloseDevice(device);
                 }
-
                 return;
             }
             
@@ -287,6 +292,25 @@ namespace BlinkStickBusylightClient
             PulseColor("#FF0000");
         }
 
+        internal void RestoreLastState()
+        {
+            switch (lastState.State)
+            {
+                case STATE.SET:
+                    SetColor(lastState.Color);
+                    break;
+                case STATE.MORPH:
+                    MorphColor(lastState.Color, lastState.Duration);
+                    break;
+                case STATE.BLINK:
+                    BlinkColor(lastState.Color, lastState.Delay, lastState.ThreadSleep);
+                    break;
+                case STATE.PULSE:
+                    PulseColor(lastState.Color, lastState.Duration, lastState.Steps, lastState.ThreadSleep);
+                    break;
+            }
+        }
+
         /****************************************************/
 
         internal void SetColor(string color)
@@ -305,6 +329,11 @@ namespace BlinkStickBusylightClient
 
                         // cleanup
                         CloseDevice(device);
+
+                        // save new state
+                        currentState = new BlinkStickState();
+                        currentState.State = STATE.SET;
+                        currentState.Color = color;
                     }
                 }
                     catch (Exception)
@@ -329,6 +358,12 @@ namespace BlinkStickBusylightClient
 
                         // cleanup
                         CloseDevice(device);
+
+                        // save new state
+                        currentState = new BlinkStickState();
+                        currentState.State = STATE.MORPH;
+                        currentState.Color = color;
+                        currentState.Duration = duration;
                     }
                 }
                     catch (Exception)
@@ -415,6 +450,14 @@ namespace BlinkStickBusylightClient
 
                         // cleanup
                         CloseDevice(device);
+
+                        // save new state
+                        currentState = new BlinkStickState();
+                        currentState.State = STATE.PULSE;
+                        currentState.Color = color;
+                        currentState.Duration = duration;
+                        currentState.Steps = steps;
+                        currentState.ThreadSleep = threadSleep;
                     }
                 }
                 catch (Exception)
@@ -457,6 +500,13 @@ namespace BlinkStickBusylightClient
 
                         // cleanup
                         CloseDevice(device);
+
+                        // save new state
+                        currentState = new BlinkStickState();
+                        currentState.State = STATE.PULSE;
+                        currentState.Color = color;
+                        currentState.Delay = delay;
+                        currentState.ThreadSleep = threadSleep;
                     }
                 }
                 catch (Exception)
