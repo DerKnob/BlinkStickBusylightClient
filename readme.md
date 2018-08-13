@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/xs4utlv4m1u2xqqc/branch/master?svg=true)](https://ci.appveyor.com/project/DerKnob/blinkstickbusylightclient/branch/master)
+
 # BlinkStick Busylight Client
 
 ![BlinkStick Logo](__ressourcen/merch/logo-homepage.png)
