@@ -6,8 +6,6 @@
 
 A Busylight Client for the [BlinkStick Pro](https://www.blinkstick.com/).
 
-**This is an Beta version!**
-
 
 ## Install or Build by yourself
 ### Included Projects
