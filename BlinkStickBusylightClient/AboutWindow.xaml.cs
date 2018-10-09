@@ -13,7 +13,12 @@ namespace BlinkStickBusylightClient
         {
             InitializeComponent();
 
-            this.Owner = MainWindow.GetInstance();
+            MainWindow mainWindow = MainWindow.GetInstance();
+            if (mainWindow != null)
+            {
+                this.Owner = mainWindow;
+            }
+
             this.Title = this.Title + " " + EnvironmentUtils.getApplicationName();
 
             string currentVersion = EnvironmentUtils.GetCurrentVersion();
