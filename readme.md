@@ -16,7 +16,12 @@ Included projects:
 The [latest Version](https://github.com/DerKnob/BlinkStickBusylightClient/releases/latest) can be downloaded as installer.
 
 ### Checkout & Build
-Checkout the project with git. Then open then Visual Studio solution. Go to **Extras->NuGet Package Manager->Package Manager Console** to open the **Package Manager Console**. Then type the command *Update-Package* to update the dependencies. If you want to setup it manually, have a look at the **3rd Party Libs** list. Now the build should work.
+Checkout the project with git. Then open then Visual Studio solution. Go to **Extras->NuGet Package Manager->Package Manager Console** to open the **Package Manager Console**.
+Then type this command:
+```
+Update-Package -reinstall
+```
+This will reinstall the NuGet dependencies. If you want to setup it manually, have a look at the **3rd Party Libs** list. Now the build should work.
 
 ## Screenshots
 The UI is not a gamechanger - but it's working ;-)
