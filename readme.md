@@ -51,4 +51,4 @@ The following tasks are open:
 
 
 ## Ideas for the Future
-- [ ] Connect to "Skype for Business" and sync the available state
+- [ ] Connect to "Microsoft Teams" and sync the available state
