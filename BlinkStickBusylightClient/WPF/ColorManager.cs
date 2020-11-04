@@ -23,6 +23,22 @@ namespace BlinkStickBusylightClient.WPF
             get { return GetPrimaryTextColor(); }
         }
 
+        public static bool SystemUsesLightTheme()
+        {
+            bool isLightMode = true;
+            try
+            {
+                var v = Microsoft.Win32.Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", "SystemUsesLightTheme", "1");
+                if (v != null && v.ToString() == "0")
+                    isLightMode = false;
+            }
+            catch
+            {
+            }
+
+            return isLightMode;
+        }
+
         private static Color GetAccentColor()
         {
             if (EnvironmentUtils.IsWindowsVersion8OrHigher())

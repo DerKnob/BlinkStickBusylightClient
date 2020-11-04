@@ -14,7 +14,14 @@ namespace BlinkStickBusylightClient
         public NotifyIcon()
         {
             notifyIcon = new System.Windows.Forms.NotifyIcon();
-            notifyIcon.Icon = Properties.Resources.trayicon;
+
+            // what tryicon should be used?
+            bool systemUsesLightTheme = WPF.ColorManager.SystemUsesLightTheme();
+            if (systemUsesLightTheme)
+                notifyIcon.Icon = Properties.Resources.trayiconBlack;
+            else
+                notifyIcon.Icon = Properties.Resources.trayicon;
+
             notifyIcon.Visible = true;
             notifyIcon.DoubleClick += new EventHandler(notifyIconDoubleClick);
 

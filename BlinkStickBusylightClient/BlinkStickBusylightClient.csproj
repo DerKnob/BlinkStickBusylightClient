@@ -152,5 +152,8 @@
     <Resource Include="Resources\favicon.ico" />
     <Resource Include="Resources\trayicon.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\trayiconBlack.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
